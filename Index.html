@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🧱 LEGO Build Gallery</title>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    /* ── Variables ── */
+    :root {
+      --red:       #e3000b;
+      --red-dark:  #a80008;
+      --red-light: #ff3340;
+      --yellow:    #f5c400;
+      --white:     #ffffff;
+      --bg:        #fff7f7;
+      --card-shadow: 0 4px 0 #ddd, 0 8px 24px rgba(0,0,0,0.07);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nunito Sans', sans-serif;
+      background: var(--bg);
+      background-image: radial-gradient(circle, #e3000b1a 1.5px, transparent 1.5px);
+      background-size: 34px 34px;
+      min-height: 100vh;
+      color: #1a1a1a;
+    }
+
+    /* ── Header ── */
+    header {
+      background: var(--red);
+      box-shadow: 0 6px 0 var(--red-dark);
+      position: relative;
+    }
+    .header-inner {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 1.6rem;
+      display: flex;
+      align-items: center;
+      gap: 1.4rem;
+    }
+    .logo-brick {
+      width: 68px; height: 68px;
+      background: var(--yellow);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900; font-size: 1.15rem;
+      color: #111;
+      box-shadow: 0 5px 0 #c89a00, inset 0 2px 4px rgba(255,255,255,0.5);
+      border: 3px solid rgba(0,0,0,0.1);
+      flex-shrink: 0;
+      line-height: 1.1; text-align: center;
+    }
+    .header-text h1 {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900; font-size: 2rem;
+      color: white;
+      text-shadow: 0 2px 0 rgba(0,0,0,0.2);
+      letter-spacing: -0.5px;
+    }
+    .header-text p { color: rgba(255,255,255,0.82); font-weight: 600; font-size: 0.95rem; margin-top: 0.25rem; }
+
+    /* Studs row */
+    .studs {
+      background: var(--red-dark);
+      display: flex; gap: 10px;
+      padding: 7px 1.5rem;
+      overflow: hidden;
+    }
+    .stud {
+      width: 26px; height: 26px; flex-shrink: 0;
+      border-radius: 50%;
+      background: var(--red);
+      border: 2px solid rgba(0,0,0,0.15);
+      box-shadow: inset 0 3px 5px rgba(255,255,255,0.25), 0 2px 3px rgba(0,0,0,0.25);
+    }
+
+    /* ── Controls ── */
+    .controls {
+      max-width: 1160px;
+      margin: 1.8rem auto 0;
+      padding: 0 1.5rem;
+      display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;
+      gap: 0.8rem;
+    }
+    .pill {
+      background: var(--red);
+      color: white;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800; font-size: 0.88rem;
+      padding: 0.38rem 1rem;
+      border-radius: 999px;
+      box-shadow: 0 3px 0 var(--red-dark);
+    }
+    .search-wrap { position: relative; }
+    .search-wrap input {
+      padding: 0.52rem 1rem 0.52rem 2.4rem;
+      border: 2.5px solid var(--red);
+      border-radius: 999px;
+      font-family: 'Nunito Sans', sans-serif;
+      font-weight: 600; font-size: 0.92rem;
+      outline: none; background: white;
+      width: 210px;
+      transition: box-shadow 0.2s;
+    }
+    .search-wrap input:focus { box-shadow: 0 0 0 3px rgba(227,0,11,0.18); }
+    .search-icon {
+      position: absolute; left: 0.72rem; top: 50%;
+      transform: translateY(-50%); font-size: 0.95rem; pointer-events: none;
+    }
+
+    /* ── Gallery grid ── */
+    .gallery {
+      max-width: 1160px;
+      margin: 1.4rem auto 3rem;
+      padding: 0 1.5rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      gap: 1.6rem;
+    }
+
+    /* ── Card ── */
+    .card {
+      background: white;
+      border-radius: 18px;
+      overflow: hidden;
+      border: 2.5px solid #eee;
+      box-shadow: var(--card-shadow);
+      display: flex; flex-direction: column;
+      transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+      animation: fadeUp 0.35s ease both;
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .card:hover {
+      transform: translateY(-5px) rotate(-0.4deg);
+      box-shadow: 0 8px 0 var(--red-dark), 0 14px 36px rgba(227,0,11,0.14);
+      border-color: var(--red);
+    }
+
+    /* Thumbnail area */
+    .card-thumb {
+      width: 100%; height: 190px;
+      background: linear-gradient(135deg, #fff0f0 0%, #ffe5e5 100%);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 0.5rem;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    .card-thumb::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: rgba(227,0,11,0);
+      transition: background 0.2s;
+    }
+    .card:hover .card-thumb::after { background: rgba(227,0,11,0.06); }
+    .thumb-icon { font-size: 3.2rem; }
+    .thumb-label {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900; font-size: 0.75rem;
+      letter-spacing: 2px;
+      color: var(--red-dark);
+      opacity: 0.7;
+    }
+
+    /* Card body */
+    .card-body {
+      padding: 0.9rem 1rem 1rem;
+      flex: 1; display: flex; flex-direction: column; gap: 0.45rem;
+    }
+    .card-title {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800; font-size: 1rem;
+      line-height: 1.3; color: #1a1a1a;
+    }
+    .card-footer {
+      margin-top: auto; padding-top: 0.6rem;
+      border-top: 1.5px dashed #ffe0e0;
+      display: flex; gap: 0.5rem;
+    }
+    .btn {
+      flex: 1; padding: 0.48rem 0;
+      border: none; border-radius: 10px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800; font-size: 0.82rem;
+      cursor: pointer;
+      transition: transform 0.12s, filter 0.12s;
+    }
+    .btn:hover { filter: brightness(1.08); }
+    .btn:active { transform: translateY(2px); }
+    .btn-view { background: var(--red); color: white; box-shadow: 0 3px 0 var(--red-dark); }
+    .btn-dl   {
+      background: #fff0f0; color: var(--red);
+      border: 2px solid #ffd0d0; box-shadow: 0 3px 0 #ffd0d0;
+      text-decoration: none; display: flex; align-items: center; justify-content: center;
+    }
+
+    /* ── Loading / Error / Empty states ── */
+    .state-box {
+      grid-column: 1 / -1;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 1rem; padding: 4rem 2rem;
+      text-align: center;
+    }
+    .spinner {
+      width: 48px; height: 48px;
+      border: 5px solid #ffd0d0;
+      border-top-color: var(--red);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .state-box p {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800; font-size: 1.1rem; color: #aaa;
+    }
+    .state-box small { color: #bbb; font-size: 0.85rem; line-height: 1.6; }
+    .error-icon { font-size: 3rem; }
+
+    /* ── Modal ── */
+    .overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(5px);
+      z-index: 200;
+      display: flex; align-items: center; justify-content: center;
+      padding: 1rem;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.22s;
+    }
+    .overlay.open { opacity: 1; pointer-events: all; }
+    .modal {
+      background: white;
+      border-radius: 20px;
+      width: 100%; max-width: 880px;
+      max-height: 93vh;
+      display: flex; flex-direction: column;
+      overflow: hidden;
+      border: 3px solid var(--red);
+      box-shadow: 0 24px 64px rgba(0,0,0,0.35);
+      transform: scale(0.94);
+      transition: transform 0.22s;
+    }
+    .overlay.open .modal { transform: scale(1); }
+    .modal-head {
+      background: var(--red);
+      padding: 0.9rem 1.2rem;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .modal-title {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900; font-size: 1.05rem; color: white;
+    }
+    .modal-x {
+      background: rgba(255,255,255,0.2);
+      border: none; color: white;
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      font-size: 1rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.18s;
+    }
+    .modal-x:hover { background: rgba(255,255,255,0.35); }
+    .modal-body { flex: 1; overflow: hidden; }
+    .modal-body iframe { width: 100%; height: 72vh; border: none; display: block; }
+
+    /* ── Setup banner ── */
+    .setup-banner {
+      max-width: 1160px;
+      margin: 0 auto 2.5rem;
+      padding: 0 1.5rem;
+    }
+    .setup-box {
+      background: white;
+      border: 2.5px solid var(--red);
+      border-radius: 18px;
+      padding: 1.4rem 1.8rem;
+      display: flex; gap: 1.2rem; flex-wrap: wrap;
+    }
+    .setup-box .s-icon { font-size: 2.2rem; flex-shrink: 0; }
+    .setup-box h3 {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900; font-size: 1.05rem; color: var(--red);
+      margin-bottom: 0.5rem;
+    }
+    .setup-box ol { padding-left: 1.2rem; color: #444; font-size: 0.9rem; line-height: 1.9; }
+    .setup-box code {
+      background: #fff0f0; color: var(--red-dark);
+      padding: 0.1rem 0.4rem; border-radius: 5px; font-size: 0.85rem;
+    }
+
+    @media (max-width: 580px) {
+      .header-text h1 { font-size: 1.45rem; }
+      .gallery { grid-template-columns: 1fr 1fr; gap: 1rem; }
+      .search-wrap input { width: 160px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo-brick">LEGO</div>
+    <div class="header-text">
+      <h1>🧱 Build Gallery</h1>
+      <p>All construction guides in one place</p>
+    </div>
+  </div>
+  <div class="studs" id="studsRow"></div>
+</header>
+
+<div class="controls">
+  <div class="pill" id="countPill">📄 Loading…</div>
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input id="searchInput" type="text" placeholder="Search guides…" oninput="filterCards()"/>
+  </div>
+</div>
+
+<div class="gallery" id="gallery">
+  <div class="state-box">
+    <div class="spinner"></div>
+    <p>Loading your guides…</p>
+  </div>
+</div>
+
+<div class="setup-banner">
+  <div class="setup-box">
+    <div class="s-icon">⚙️</div>
+    <div>
+      <h3>One-time setup — How to connect your Google Drive folder</h3>
+      <ol>
+        <li>Go to <strong>script.google.com</strong> → New project → paste the contents of <code>Code.gs</code></li>
+        <li>Replace <code>PASTE_YOUR_FOLDER_ID_HERE</code> with your Drive folder ID<br>
+            <em>(the long ID in the folder URL: drive.google.com/drive/folders/<strong>THIS_PART</strong>)</em></li>
+        <li>Click <strong>Deploy → New deployment → Web App</strong><br>
+            Set <em>"Execute as: Me"</em> and <em>"Who has access: Anyone"</em></li>
+        <li>Copy the Web App URL and paste it below as <code>APPS_SCRIPT_URL</code> in this file</li>
+        <li>Make your Drive folder public: right-click folder → Share → <em>"Anyone with the link can view"</em></li>
+        <li>Push to GitHub Pages — done! ✅ Add any PDF to the folder and it appears automatically.</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<!-- PDF Viewer Modal -->
+<div class="overlay" id="overlay" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-head">
+      <span class="modal-title" id="modalTitle">PDF Viewer</span>
+      <button class="modal-x" onclick="closeModalDirect()">✕</button>
+    </div>
+    <div class="modal-body">
+      <iframe id="modalFrame" src="" allowfullscreen></iframe>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ─────────────────────────────────────────────────────────
+  //  🔧 PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE
+  // ─────────────────────────────────────────────────────────
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwcobJY3kNYYrfAoyE6sOERkTJaI3jWiAnF6RQFVmZro1vc8n13y_WeeFkHtzdqzC4/exec";
+  // ─────────────────────────────────────────────────────────
+
+  let allPdfs = [];
+
+  async function loadPdfs() {
+    const gallery = document.getElementById('gallery');
+
+    if (APPS_SCRIPT_URL === "PASTE_YOUR_APPS_SCRIPT_URL_HERE") {
+      gallery.innerHTML = `
+        <div class="state-box">
+          <div class="error-icon">⚙️</div>
+          <p>Setup required</p>
+          <small>Follow the instructions below to connect<br>your Google Drive folder.</small>
+        </div>`;
+      document.getElementById('countPill').textContent = '📄 Not connected';
+      return;
+    }
+
+    try {
+      const res = await fetch(APPS_SCRIPT_URL);
+      const data = await res.json();
+
+      if (!data.ok) throw new Error(data.error || 'Unknown error');
+
+      allPdfs = data.pdfs;
+      renderCards(allPdfs);
+
+    } catch (err) {
+      gallery.innerHTML = `
+        <div class="state-box">
+          <div class="error-icon">❌</div>
+          <p>Could not load guides</p>
+          <small>${err.message}<br>Check that your Apps Script is deployed<br>and the folder is public.</small>
+        </div>`;
+      document.getElementById('countPill').textContent = '⚠️ Error';
+    }
+  }
+
+  function filterCards() {
+    const q = document.getElementById('searchInput').value.toLowerCase().trim();
+    const filtered = q
+      ? allPdfs.filter(p => p.title.toLowerCase().includes(q))
+      : allPdfs;
+    renderCards(filtered);
+  }
+
+  function renderCards(list) {
+    const gallery = document.getElementById('gallery');
+    const pill = document.getElementById('countPill');
+
+    pill.textContent = `📄 ${allPdfs.length} Guide${allPdfs.length !== 1 ? 's' : ''}`;
+
+    if (list.length === 0) {
+      gallery.innerHTML = `
+        <div class="state-box">
+          <div class="error-icon">🔍</div>
+          <p>No guides found</p>
+          <small>Try a different search term.</small>
+        </div>`;
+      return;
+    }
+
+    gallery.innerHTML = list.map((pdf, i) => `
+      <div class="card" style="animation-delay: ${i * 0.05}s">
+        <div class="card-thumb" onclick="openModal('${pdf.previewUrl}', '${escHtml(pdf.title)}')">
+          <div class="thumb-icon">📄</div>
+          <div class="thumb-label">CLICK TO VIEW</div>
+        </div>
+        <div class="card-body">
+          <div class="card-title">${escHtml(pdf.title)}</div>
+          <div class="card-footer">
+            <button class="btn btn-view" onclick="openModal('${pdf.previewUrl}', '${escHtml(pdf.title)}')">👁 View</button>
+            <a class="btn btn-dl" href="${pdf.downloadUrl}" target="_blank" rel="noopener">⬇ Download</a>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function escHtml(str) {
+    return str.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  function openModal(url, title) {
+    document.getElementById('modalFrame').src = url;
+    document.getElementById('modalTitle').textContent = '📄 ' + title;
+    document.getElementById('overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeModal(e) {
+    if (e.target === document.getElementById('overlay')) closeModalDirect();
+  }
+  function closeModalDirect() {
+    document.getElementById('overlay').classList.remove('open');
+    document.getElementById('modalFrame').src = '';
+    document.body.style.overflow = '';
+  }
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModalDirect(); });
+
+  // Studs
+  const row = document.getElementById('studsRow');
+  for (let i = 0; i < 70; i++) {
+    const s = document.createElement('div');
+    s.className = 'stud';
+    row.appendChild(s);
+  }
+
+  loadPdfs();
+</script>
+</body>
+</html>
