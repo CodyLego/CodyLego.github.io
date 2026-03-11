@@ -1,9 +1,13 @@
+<!DOCTYPE html> <html lang="en"> <head> <meta charset="UTF-8" /> <meta name="viewport" content="width=device-width, initial-scale=1.0"/>   <title>🧱 Cody Space Lego Gallery</title>
+ <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Nunito+Sans:wght@400;600;700
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>🧱 LEGO Build Gallery</title>
+  <title>🧱 Cody Space Lego Gallery</title>
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet"/>
   <style>
     /* ── Variables ── */
@@ -64,6 +68,21 @@
     }
     .header-text p { color: rgba(255,255,255,0.82); font-weight: 600; font-size: 0.95rem; margin-top: 0.25rem; }
 
+    .logout-btn {
+      margin-left: auto;
+      background: rgba(255,255,255,0.15);
+      border: 2px solid rgba(255,255,255,0.3);
+      color: white;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800; font-size: 0.85rem;
+      padding: 0.5rem 1.1rem;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background 0.2s;
+      flex-shrink: 0;
+    }
+    .logout-btn:hover { background: rgba(255,255,255,0.28); }
+
     /* Studs row */
     .studs {
       background: var(--red-dark);
@@ -113,6 +132,50 @@
       transform: translateY(-50%); font-size: 0.95rem; pointer-events: none;
     }
 
+    /* ── Filter buttons ── */
+    .filters {
+      max-width: 1160px;
+      margin: 1rem auto 0;
+      padding: 0 1.5rem;
+      display: flex; flex-wrap: wrap; gap: 0.6rem;
+    }
+    .filter-btn {
+      padding: 0.42rem 1.1rem;
+      border-radius: 999px;
+      border: 2.5px solid #ffd0d0;
+      background: white;
+      color: #888;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 800; font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.18s;
+      box-shadow: 0 2px 0 #eee;
+    }
+    .filter-btn:hover {
+      border-color: var(--red);
+      color: var(--red);
+      box-shadow: 0 2px 0 var(--red-dark);
+    }
+    .filter-btn.active {
+      background: var(--red);
+      color: white;
+      border-color: var(--red);
+      box-shadow: 0 3px 0 var(--red-dark);
+    }
+
+    /* ── Category tag on card ── */
+    .card-tag {
+      display: inline-block;
+      background: #fff0f0;
+      color: var(--red);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.18rem 0.6rem;
+      border-radius: 999px;
+      border: 1.5px solid #ffd0d0;
+      width: fit-content;
+    }
+
     /* ── Gallery grid ── */
     .gallery {
       max-width: 1160px;
@@ -148,27 +211,39 @@
     .card-thumb {
       width: 100%; height: 190px;
       background: linear-gradient(135deg, #fff0f0 0%, #ffe5e5 100%);
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      gap: 0.5rem;
       cursor: pointer;
       position: relative;
       overflow: hidden;
     }
+    .card-thumb img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.3s ease;
+    }
+    .card:hover .card-thumb img { transform: scale(1.05); }
     .card-thumb::after {
-      content: '';
+      content: '👁  View';
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900; font-size: 0.95rem;
+      color: white;
       position: absolute; inset: 0;
       background: rgba(227,0,11,0);
-      transition: background 0.2s;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.25s, opacity 0.25s;
+      opacity: 0;
     }
-    .card:hover .card-thumb::after { background: rgba(227,0,11,0.06); }
+    .card:hover .card-thumb::after { background: rgba(227,0,11,0.55); opacity: 1; }
+    .thumb-fallback {
+      width: 100%; height: 100%;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 0.5rem;
+    }
     .thumb-icon { font-size: 3.2rem; }
     .thumb-label {
       font-family: 'Nunito', sans-serif;
       font-weight: 900; font-size: 0.75rem;
-      letter-spacing: 2px;
-      color: var(--red-dark);
-      opacity: 0.7;
+      letter-spacing: 2px; color: var(--red-dark); opacity: 0.7;
     }
 
     /* Card body */
@@ -303,20 +378,158 @@
       .gallery { grid-template-columns: 1fr 1fr; gap: 1rem; }
       .search-wrap input { width: 160px; }
     }
+
+    /* ── Password screen ── */
+    #passwordScreen {
+      position: fixed; inset: 0; z-index: 999;
+      background: var(--red);
+      background-image: radial-gradient(circle, rgba(255,255,255,0.08) 1.5px, transparent 1.5px);
+      background-size: 34px 34px;
+      display: flex; align-items: center; justify-content: center;
+      padding: 1.5rem;
+    }
+    .pw-box {
+      background: white;
+      border-radius: 24px;
+      padding: 2.8rem 2.4rem;
+      width: 100%; max-width: 400px;
+      text-align: center;
+      box-shadow: 0 12px 0 var(--red-dark), 0 20px 60px rgba(0,0,0,0.3);
+      border: 3px solid rgba(255,255,255,0.3);
+      animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+    }
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.85) translateY(20px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .pw-logo {
+      width: 80px; height: 80px;
+      background: var(--yellow);
+      border-radius: 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900; font-size: 1.3rem; color: #111;
+      box-shadow: 0 5px 0 #c89a00, inset 0 2px 4px rgba(255,255,255,0.5);
+      border: 3px solid rgba(0,0,0,0.1);
+      margin: 0 auto 1.4rem;
+    }
+    .pw-box h2 {
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900; font-size: 1.6rem;
+      color: #1a1a1a; margin-bottom: 0.3rem;
+    }
+    .pw-box p {
+      color: #888; font-size: 0.92rem;
+      font-weight: 600; margin-bottom: 1.6rem;
+    }
+    .pw-input-wrap { position: relative; margin-bottom: 1rem; }
+    .pw-input-wrap input {
+      width: 100%;
+      padding: 0.85rem 3rem 0.85rem 1.2rem;
+      border: 2.5px solid #eee;
+      border-radius: 14px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700; font-size: 1.1rem;
+      text-align: center; letter-spacing: 3px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .pw-input-wrap input:focus {
+      border-color: var(--red);
+      box-shadow: 0 0 0 3px rgba(227,0,11,0.15);
+    }
+    .pw-input-wrap input.error {
+      border-color: var(--red);
+      animation: shake 0.4s ease;
+    }
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      20%      { transform: translateX(-8px); }
+      40%      { transform: translateX(8px); }
+      60%      { transform: translateX(-5px); }
+      80%      { transform: translateX(5px); }
+    }
+    .pw-toggle {
+      position: absolute; right: 1rem; top: 50%;
+      transform: translateY(-50%);
+      background: none; border: none;
+      font-size: 1.2rem; cursor: pointer; opacity: 0.5;
+      transition: opacity 0.2s;
+    }
+    .pw-toggle:hover { opacity: 1; }
+    .pw-submit {
+      width: 100%;
+      padding: 0.9rem;
+      background: var(--red);
+      color: white;
+      border: none; border-radius: 14px;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 900; font-size: 1.05rem;
+      cursor: pointer;
+      box-shadow: 0 4px 0 var(--red-dark);
+      transition: filter 0.15s, transform 0.15s;
+    }
+    .pw-submit:hover { filter: brightness(1.1); }
+    .pw-submit:active { transform: translateY(3px); box-shadow: 0 1px 0 var(--red-dark); }
+    .pw-error {
+      color: var(--red);
+      font-weight: 700; font-size: 0.88rem;
+      margin-top: 0.8rem; min-height: 1.2rem;
+    }
+    .pw-studs {
+      display: flex; justify-content: center; gap: 8px;
+      margin-bottom: 1.4rem;
+    }
+    .pw-stud {
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: var(--red);
+      border: 2px solid rgba(0,0,0,0.1);
+      box-shadow: inset 0 2px 4px rgba(255,255,255,0.3);
+    }
   </style>
 </head>
 <body>
 
+<!-- Password Screen -->
+<div id="passwordScreen">
+  <div class="pw-box">
+    <img src="logo2.png" alt="Logo" style="width:50%; height:30%; object-fit:contain;">
+    <div class="pw-studs">
+      <div class="pw-stud"></div>
+      <div class="pw-stud"></div>
+      <div class="pw-stud"></div>
+      <div class="pw-stud"></div>
+      <div class="pw-stud"></div>
+    </div>
+    <h2>🧱 Cody Space Lego Gallery</h2>
+    <p>Enter the class password to continue</p>
+    <div class="pw-input-wrap">
+      <input
+        type="password"
+        id="pwInput"
+        placeholder="••••••••"
+        onkeydown="if(event.key==='Enter') checkPassword()"
+      />
+      <button class="pw-toggle" onclick="togglePwVisibility()" title="Show/hide">👁</button>
+    </div>
+    <button class="pw-submit" onclick="checkPassword()">Enter Gallery →</button>
+    <div class="pw-error" id="pwError"></div>
+  </div>
+</div>
+
 <header>
-  <div class="header-inner">
-    <div class="logo-brick">LEGO</div>
+  <div class="header-inner"> 
+    <div> 
+    <img src="logo.png" alt="Logo" style="width:30%; height:30%; ">
+</div>
     <div class="header-text">
-      <h1>🧱 Build Gallery</h1>
-      <p>All construction guides in one place</p>
+      <h1>Cody Space Lego Gallery</h1>
+      <p>By Ali hadj hassan </p>
     </div>
   </div>
   <div class="studs" id="studsRow"></div>
-</header>
+</header> 
 
 <div class="controls">
   <div class="pill" id="countPill">📄 Loading…</div>
@@ -326,6 +539,8 @@
   </div>
 </div>
 
+<div class="filters" id="filters"></div>
+
 <div class="gallery" id="gallery">
   <div class="state-box">
     <div class="spinner"></div>
@@ -333,7 +548,7 @@
   </div>
 </div>
 
-<div class="setup-banner">
+<!-- <div class="setup-banner">
   <div class="setup-box">
     <div class="s-icon">⚙️</div>
     <div>
@@ -351,7 +566,7 @@
     </div>
   </div>
 </div>
-
+-->
 <!-- PDF Viewer Modal -->
 <div class="overlay" id="overlay" onclick="closeModal(event)">
   <div class="modal">
@@ -366,6 +581,42 @@
 </div>
 
 <script>
+  // ── Password ──
+  const PASSWORD = "cody2026";
+  const SESSION_KEY = "lego_gallery_auth";
+
+  function checkPassword() {
+    const input = document.getElementById('pwInput');
+    const error = document.getElementById('pwError');
+    if (input.value === PASSWORD) {
+      sessionStorage.setItem(SESSION_KEY, "1");
+      const screen = document.getElementById('passwordScreen');
+      screen.style.transition = 'opacity 0.4s';
+      screen.style.opacity = '0';
+      setTimeout(() => screen.remove(), 400);
+    } else {
+      error.textContent = '❌ Wrong password, try again!';
+      input.classList.add('error');
+      input.value = '';
+      setTimeout(() => input.classList.remove('error'), 500);
+    }
+  }
+
+  function togglePwVisibility() {
+    const input = document.getElementById('pwInput');
+    input.type = input.type === 'password' ? 'text' : 'password';
+  }
+
+  function logout() {
+    sessionStorage.removeItem(SESSION_KEY);
+    location.reload();
+  }
+
+  // If already authenticated this session, skip password screen
+  if (sessionStorage.getItem(SESSION_KEY) === "1") {
+    document.getElementById('passwordScreen').remove();
+  }
+
   // ─────────────────────────────────────────────────────────
   //  🔧 PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE
   // ─────────────────────────────────────────────────────────
@@ -373,6 +624,7 @@
   // ─────────────────────────────────────────────────────────
 
   let allPdfs = [];
+  let activeCategory = 'All';
 
   async function loadPdfs() {
     const gallery = document.getElementById('gallery');
@@ -391,12 +643,10 @@
     try {
       const res = await fetch(APPS_SCRIPT_URL);
       const data = await res.json();
-
       if (!data.ok) throw new Error(data.error || 'Unknown error');
-
       allPdfs = data.pdfs;
+      renderFilters();
       renderCards(allPdfs);
-
     } catch (err) {
       gallery.innerHTML = `
         <div class="state-box">
@@ -408,11 +658,29 @@
     }
   }
 
+  function renderFilters() {
+    const categories = ['All', ...new Set(allPdfs.map(p => p.category))];
+    const container = document.getElementById('filters');
+    container.innerHTML = categories.map(cat => `
+      <button
+        class="filter-btn ${cat === activeCategory ? 'active' : ''}"
+        onclick="setFilter('${escHtml(cat)}')"
+      >🧱 ${escHtml(cat)}</button>
+    `).join('');
+  }
+
+  function setFilter(category) {
+    activeCategory = category;
+    renderFilters();
+    filterCards();
+  }
+
   function filterCards() {
     const q = document.getElementById('searchInput').value.toLowerCase().trim();
-    const filtered = q
-      ? allPdfs.filter(p => p.title.toLowerCase().includes(q))
-      : allPdfs;
+    let filtered = activeCategory === 'All'
+      ? allPdfs
+      : allPdfs.filter(p => p.category === activeCategory);
+    if (q) filtered = filtered.filter(p => p.title.toLowerCase().includes(q));
     renderCards(filtered);
   }
 
@@ -435,11 +703,19 @@
     gallery.innerHTML = list.map((pdf, i) => `
       <div class="card" style="animation-delay: ${i * 0.05}s">
         <div class="card-thumb" onclick="openModal('${pdf.previewUrl}', '${escHtml(pdf.title)}')">
-          <div class="thumb-icon">📄</div>
-          <div class="thumb-label">CLICK TO VIEW</div>
+          <img
+            src="${pdf.thumbnailUrl}"
+            alt="${escHtml(pdf.title)}"
+            onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
+          />
+          <div class="thumb-fallback" style="display:none;">
+            <div class="thumb-icon">📄</div>
+            <div class="thumb-label">CLICK TO VIEW</div>
+          </div>
         </div>
         <div class="card-body">
           <div class="card-title">${escHtml(pdf.title)}</div>
+          <div class="card-tag">🧱 ${escHtml(pdf.category)}</div>
           <div class="card-footer">
             <button class="btn btn-view" onclick="openModal('${pdf.previewUrl}', '${escHtml(pdf.title)}')">👁 View</button>
             <a class="btn btn-dl" href="${pdf.downloadUrl}" target="_blank" rel="noopener">⬇ Download</a>
